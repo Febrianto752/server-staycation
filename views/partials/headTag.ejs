@@ -8,7 +8,7 @@
   <meta name="description" content="" />
   <meta name="author" content="" />
 
-  <title>Dashboard</title>
+  <title><%= title %></title>
 
   <!-- Custom fonts for this template-->
   <link
@@ -24,8 +24,10 @@
   <!-- Custom styles for this template-->
   <link href="/sb-admin-2/css/sb-admin-2.min.css" rel="stylesheet" />
   <!-- Custom styles for this page -->
+  <% if(typeof dataTables !== 'undefined'){ %> <% if(dataTables !== false){ %>
   <link
     href="/sb-admin-2/vendor/datatables/dataTables.bootstrap4.min.css"
     rel="stylesheet"
   />
+  <% } %> <% } %>
 </head>
