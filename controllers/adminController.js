@@ -11,4 +11,7 @@ module.exports = {
   viewBank: (req, res) => {
     res.render("admin/bank/index", { title: "bank", dataTables: true });
   },
+  viewItem: (req, res) => {
+    res.render("admin/item/index", { title: "item", dataTables: true });
+  },
 };
