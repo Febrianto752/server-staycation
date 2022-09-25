@@ -14,4 +14,7 @@ module.exports = {
   viewItem: (req, res) => {
     res.render("admin/item/index", { title: "item", dataTables: true });
   },
+  viewBooking: (req, res) => {
+    res.render("admin/booking/index", { title: "booking", dataTables: true });
+  },
 };
