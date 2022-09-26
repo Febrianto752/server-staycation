@@ -14,8 +14,9 @@
 
           <!-- Begin Page Content -->
           <div class="container-fluid">
+            <%- include('../../partials/flashMessage.ejs') %>
             <!-- Page Heading -->
-            <h1 class="h3 mb-4 text-gray-800">Category</h1>
+            <h1 class="h3 mb-4 text-gray-800">Bank</h1>
 
             <%- include('tables.ejs') %>
           </div>
@@ -35,6 +36,57 @@
     </a>
 
     <%- include('../../partials/modal.ejs') %> <%-
-    include('../../partials/script.ejs') %>
+    include('../../partials/script.ejs') %> <%- include('./addModal.ejs') %> <%-
+    include('./editModal.ejs') %>
+
+    <script>
+      // $("#dataTable").on("click", ".btn-update", function () {
+      //   const id = $(this).data("id");
+      //   const name = $(this).data("name");
+      //   $("#editCategoryModal").modal("show");
+      //   $("#id-category").val(id);
+      //   $("#name-edit").val(name);
+      // });
+
+      // show and set modal update category
+      const btnUpdate = document.getElementsByClassName("btn-update")[0];
+      const dataTableElem = document.getElementById("dataTable");
+
+      dataTableElem.addEventListener("click", function (event) {
+        const targetElem = event.target;
+        if (
+          targetElem.classList.contains("btn-update") ||
+          targetElem.classList.contains("fa-edit")
+        ) {
+          let dataId = null;
+          let dataName = null;
+
+          if (targetElem.classList.contains("btn-update")) {
+            dataId = targetElem.dataset.id;
+            dataName = targetElem.dataset.name;
+          } else {
+            dataId = targetElem.parentElement.dataset.id;
+            dataName = targetElem.parentElement.dataset.name;
+          }
+
+          const inputNameCategory = document.getElementById("name-edit");
+          const inputIdCategory = document.getElementById("id-category");
+
+          inputNameCategory.value = dataName;
+          inputIdCategory.value = dataId;
+
+          $("#editCategoryModal").modal("show");
+        }
+      });
+
+      // handle change label name
+      document
+        .querySelector(".custom-file-input")
+        .addEventListener("change", function (e) {
+          var fileName = document.getElementById("add-image-url").files[0].name;
+          var nextSibling = e.target.nextElementSibling;
+          nextSibling.innerText = fileName;
+        });
+    </script>
   </body>
 </html>

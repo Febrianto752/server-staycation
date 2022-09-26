@@ -1,4 +1,5 @@
 const Category = require("../models/Category");
+const Bank = require("../models/Bank");
 
 module.exports = {
   viewDashboard: (req, res) => {
@@ -20,7 +21,7 @@ module.exports = {
         alert,
       });
     } catch (error) {
-      res.redirect("/admin/category");
+      res.render("admin/category/index");
     }
   },
   addCategory: async (req, res) => {
@@ -59,8 +60,47 @@ module.exports = {
     req.flash("alertStatus", "success");
     res.redirect("/admin/category");
   },
-  viewBank: (req, res) => {
-    res.render("admin/bank/index", { title: "bank", dataTables: true });
+  viewBank: async (req, res) => {
+    try {
+      const banks = await Bank.find();
+      const alertMessage = req.flash("alertMessage");
+      const alertStatus = req.flash("alertStatus");
+      const alert = { message: alertMessage, status: alertStatus };
+      res.render("admin/bank/index", {
+        title: "bank",
+        dataTables: true,
+        banks,
+        alert,
+      });
+    } catch (error) {
+      const alertMessage = req.flash("alertMessage", `${error.message}`);
+      const alertStatus = req.flash("alertStatus", "danger");
+      const alert = { message: alertMessage, status: alertStatus };
+      res.render("admin/bank/index", {
+        title: "bank",
+        dataTables: true,
+        alert,
+      });
+    }
+  },
+  addBank: async (req, res) => {
+    try {
+      const { bankName, accountNumber, accountHolder } = req.body;
+      await Bank.create({
+        bankName,
+        accountNumber,
+        accountHolder,
+        imageUrl: `images/${req.file.filename}`,
+      });
+      console.log(req.file);
+      req.flash("alertMessage", "Succesfully to added bank");
+      req.flash("alertStatus", "success");
+      res.redirect("/admin/bank");
+    } catch (error) {
+      req.flash("alertMessage", "failed to added bank");
+      req.flash("alertStatus", "danger");
+      res.redirect("/admin/bank");
+    }
   },
   viewItem: (req, res) => {
     res.render("admin/item/index", { title: "item", dataTables: true });
