@@ -1,6 +1,14 @@
 <div class="card shadow mb-4">
   <div class="card-header py-3">
-    <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+    <!-- Button trigger modal -->
+    <button
+      type="button"
+      class="btn btn-primary"
+      data-toggle="modal"
+      data-target="#addCategoryModal"
+    >
+      <i class="fas fa-plus"></i>
+    </button>
   </div>
   <div class="card-body">
     <div class="table-responsive">
@@ -17,9 +25,57 @@
             <th>Action</th>
           </tr>
         </thead>
+        <tbody>
+          <% for(let i = 0; i < categories.length; i++){ %>
+          <tr>
+            <td><%= i+1 %></td>
+            <td><%= categories[i].name %></td>
+            <td>
+              <button
+                type="button"
+                class="btn btn-sm btn-warning btn-circle btn-update"
+                data-id="<%= categories[i]._id %>"
+                data-name="<%= categories[i].name %>"
+              >
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn btn-sm btn-danger btn-circle">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
 
-        <tbody></tbody>
+          <% } %>
+        </tbody>
       </table>
     </div>
   </div>
 </div>
+<%- include('../../partials/script.ejs') %> <%- include('./add_modal.ejs') %>
+<%- include('./edit_modal.ejs') %>
+
+<script>
+  // $("#dataTable").on("click", ".btn-update", function () {
+  //   const id = $(this).data("id");
+  //   const name = $(this).data("name");
+  //   $("#editCategoryModal").modal("show");
+  //   $("#id-category").val(id);
+  //   $(".name-edit").val(name);
+  //   console.log("hao");
+  // });
+
+  const btnUpdate = document.getElementsByClassName("btn-update")[0];
+  btnUpdate.addEventListener("click", function () {
+    const dataId = this.dataset.id;
+    const dataName = this.dataset.name;
+
+    const inputNameCategory = document.getElementById("name-edit");
+    const inputIdCategory = document.getElementById("id-category");
+
+    inputNameCategory.value = dataName;
+    inputIdCategory.value = dataId;
+
+    $("#editCategoryModal").modal("show");
+  });
+</script>
+asd

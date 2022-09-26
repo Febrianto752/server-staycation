@@ -1,3 +1,5 @@
+const Category = require("../models/Category");
+
 module.exports = {
   viewDashboard: (req, res) => {
     res.render("admin/dashboard/index", {
@@ -5,8 +7,19 @@ module.exports = {
       dataTables: false,
     });
   },
-  viewCategory: (req, res) => {
-    res.render("admin/category/index", { title: "category", dataTables: true });
+  viewCategory: async (req, res) => {
+    const categories = await Category.find();
+    res.render("admin/category/index", {
+      title: "category",
+      dataTables: true,
+      categories,
+    });
+  },
+  addCategory: async (req, res) => {
+    const { name } = req.body;
+    await Category.create({ name });
+
+    res.redirect("/admin/category");
   },
   viewBank: (req, res) => {
     res.render("admin/bank/index", { title: "bank", dataTables: true });
