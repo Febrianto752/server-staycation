@@ -40,53 +40,68 @@
     include('./editModal.ejs') %>
 
     <script>
-      // $("#dataTable").on("click", ".btn-update", function () {
-      //   const id = $(this).data("id");
-      //   const name = $(this).data("name");
-      //   $("#editCategoryModal").modal("show");
-      //   $("#id-category").val(id);
-      //   $("#name-edit").val(name);
-      // });
-
-      // show and set modal update category
-      const btnUpdate = document.getElementsByClassName("btn-update")[0];
-      const dataTableElem = document.getElementById("dataTable");
-
-      dataTableElem.addEventListener("click", function (event) {
-        const targetElem = event.target;
-        if (
-          targetElem.classList.contains("btn-update") ||
-          targetElem.classList.contains("fa-edit")
-        ) {
-          let dataId = null;
-          let dataName = null;
-
-          if (targetElem.classList.contains("btn-update")) {
-            dataId = targetElem.dataset.id;
-            dataName = targetElem.dataset.name;
-          } else {
-            dataId = targetElem.parentElement.dataset.id;
-            dataName = targetElem.parentElement.dataset.name;
-          }
-
-          const inputNameCategory = document.getElementById("name-edit");
-          const inputIdCategory = document.getElementById("id-category");
-
-          inputNameCategory.value = dataName;
-          inputIdCategory.value = dataId;
-
-          $("#editCategoryModal").modal("show");
-        }
+      $("#dataTable").on("click", ".btn-update", function () {
+        const id = $(this).data("id");
+        const bankName = $(this).data("bankname");
+        const accountNumber = $(this).data("accountnumber");
+        const accountHolder = $(this).data("accountholder");
+        $("#editBankModal").modal("show");
+        $("#id-bank").val(id);
+        $("#edit-bank-name").val(bankName);
+        $("#edit-account-number").val(accountNumber);
+        $("#edit-account-holder").val(accountHolder);
       });
 
+      // show and set modal update Bank
+      // const btnUpdate = document.getElementsByClassName("btn-update")[0];
+      // const dataTableElem = document.getElementById("dataTable");
+
+      // dataTableElem.addEventListener("click", function (event) {
+      //   const targetElem = event.target;
+      //   if (
+      //     targetElem.classList.contains("btn-update") ||
+      //     targetElem.classList.contains("fa-edit")
+      //   ) {
+      //     let dataId = null;
+      //     let dataName = null;
+
+      //     if (targetElem.classList.contains("btn-update")) {
+      //       dataId = targetElem.dataset.id;
+      //       dataName = targetElem.dataset.name;
+      //     } else {
+      //       dataId = targetElem.parentElement.dataset.id;
+      //       dataName = targetElem.parentElement.dataset.name;
+      //     }
+
+      //     const inputNameBank = document.getElementById("name-edit");
+      //     const inputIdBank = document.getElementById("id-bank");
+
+      //     inputNameBank.value = dataName;
+      //     inputIdBank.value = dataId;
+
+      //     $("#editBankModal").modal("show");
+      //   }
+      // });
+
       // handle change label name
-      document
-        .querySelector(".custom-file-input")
-        .addEventListener("change", function (e) {
-          var fileName = document.getElementById("add-image-url").files[0].name;
+      const customFileInputElem =
+        document.getElementsByClassName("custom-file-input");
+
+      for (const elemen of customFileInputElem) {
+        elemen.addEventListener("change", function (e) {
+          var fileName = this.files[0].name;
           var nextSibling = e.target.nextElementSibling;
           nextSibling.innerText = fileName;
         });
+      }
+
+      // document
+      //   .querySelector(".custom-file-input")
+      //   .addEventListener("change", function (e) {
+      //     var fileName = document.getElementById("add-image-url").files[0].name;
+      //     var nextSibling = e.target.nextElementSibling;
+      //     nextSibling.innerText = fileName;
+      //   });
     </script>
   </body>
 </html>

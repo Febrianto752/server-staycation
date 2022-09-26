@@ -23,11 +23,50 @@
             <th>Bank Name</th>
             <th>Account Number</th>
             <th>Account Holder</th>
+            <th>Image</th>
             <th>Action</th>
           </tr>
         </thead>
 
-        <tbody></tbody>
+        <tbody>
+          <% for(let i = 0; i < banks.length; i++){ %>
+          <tr>
+            <td><%= i+1 %></td>
+            <td><%= banks[i].bankName %></td>
+            <td><%= banks[i].accountNumber %></td>
+            <td><%= banks[i].accountHolder %></td>
+            <td>
+              <img src="/<%= banks[i].imageUrl %>" alt="bank" width="60" />
+            </td>
+            <td>
+              <button
+                type="button"
+                class="btn btn-sm btn-warning btn-circle btn-update"
+                data-id="<%= banks[i]._id %>"
+                data-bankname="<%= banks[i].bankName %>"
+                data-accountnumber="<%= banks[i].accountNumber %>"
+                data-accountholder="<%= banks[i].accountHolder %>"
+              >
+                <i class="fas fa-edit"></i>
+              </button>
+              <form
+                action="/admin/category/<%= banks[i]._id %>?_method=DELETE"
+                method="post"
+                class="d-inline-block"
+              >
+                <button
+                  class="btn btn-sm btn-danger btn-circle"
+                  type="submit"
+                  onclick="return confirm('are you sure to deleted it?')"
+                >
+                  <i class="fas fa-trash"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+
+          <% } %>
+        </tbody>
       </table>
     </div>
   </div>

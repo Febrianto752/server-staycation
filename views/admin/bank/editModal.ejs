@@ -1,16 +1,16 @@
 <!-- Modal -->
 <div
   class="modal fade"
-  id="editCategoryModal"
+  id="editBankModal"
   tabindex="-1"
   role="dialog"
-  aria-labelledby="editCategoryLabel"
+  aria-labelledby="editBankLabel"
   aria-hidden="true"
 >
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="editCategoryLabel">Edit Bank</h5>
+        <h5 class="modal-title" id="editBankLabel">Edit Bank</h5>
         <button
           type="button"
           class="close"
@@ -20,22 +20,62 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="/admin/category?_method=PUT" method="post">
+      <form
+        action="/admin/bank?_method=PUT"
+        method="post"
+        enctype="multipart/form-data"
+      >
         <div class="modal-body">
           <div class="form-group">
-            <label for="name">Name</label>
+            <label for="edit-bank-name">Bank Name</label>
             <input
               type="text"
               class="form-control"
-              id="name-edit"
-              name="name"
-              placeholder="Name.."
+              id="edit-bank-name"
+              name="bankName"
+              placeholder="Bank Name..."
               required
             />
           </div>
+          <div class="form-group">
+            <label for="edit-account-number">Account Number</label>
+            <input
+              type="number"
+              class="form-control"
+              id="edit-account-number"
+              name="accountNumber"
+              placeholder="Account Number..."
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="edit-account-holder">Account Holder</label>
+            <input
+              type="text"
+              class="form-control"
+              id="edit-account-holder"
+              name="accountHolder"
+              placeholder="Bank Name..."
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="edit-image-url">Image Bank</label>
+            <div class="custom-file">
+              <input
+                type="file"
+                class="custom-file-input"
+                id="edit-image-url"
+                name="image"
+              />
+              <label class="custom-file-label" for="edit-image-url"
+                >Choose file</label
+              >
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
-          <input type="hidden" id="id-category" class="id" name="id" />
+          <input type="hidden" id="id-bank" class="id" name="id" />
           <button type="button" class="btn btn-secondary" data-dismiss="modal">
             Close
           </button>
