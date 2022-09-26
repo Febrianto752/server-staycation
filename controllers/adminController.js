@@ -16,17 +16,25 @@ module.exports = {
     });
   },
   addCategory: async (req, res) => {
-    const { name } = req.body;
-    await Category.create({ name });
+    try {
+      const { name } = req.body;
+      await Category.create({ name });
 
-    res.redirect("/admin/category");
+      res.redirect("/admin/category");
+    } catch (error) {
+      res.redirect("/admin/category");
+    }
   },
   updateCategory: async (req, res) => {
-    const { id, name } = req.body;
-    const categoryById = await Category.findOne({ _id: id });
-    categoryById.name = name;
-    await categoryById.save();
-    res.redirect("/admin/category");
+    try {
+      const { id, name } = req.body;
+      const categoryById = await Category.findOne({ _id: id });
+      categoryById.name = name;
+      await categoryById.save();
+      res.redirect("/admin/category");
+    } catch (error) {
+      res.redirect("/admin/category");
+    }
   },
   deleteCategory: async (req, res) => {
     const { id } = req.params;
