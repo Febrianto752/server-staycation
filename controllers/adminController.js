@@ -28,6 +28,12 @@ module.exports = {
     await categoryById.save();
     res.redirect("/admin/category");
   },
+  deleteCategory: async (req, res) => {
+    const { id } = req.params;
+    const categoryById = Category.findOne({ _id: id });
+    await categoryById.remove();
+    res.redirect("/admin/category");
+  },
   viewBank: (req, res) => {
     res.render("admin/bank/index", { title: "bank", dataTables: true });
   },
