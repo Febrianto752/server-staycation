@@ -4,6 +4,8 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const methodOverride = require("method-override");
+const flash = require("connect-flash");
+const session = require("express-session");
 
 // import mongoose
 const mongoose = require("mongoose");
@@ -35,6 +37,17 @@ app.use(
   "/sb-admin-2",
   express.static(path.join(__dirname, "node_modules/startbootstrap-sb-admin-2"))
 );
+// setup express session
+app.use(
+  session({
+    secret: "keyboard cat",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 60000 },
+  })
+);
+// setup connect-flash
+app.use(flash());
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);

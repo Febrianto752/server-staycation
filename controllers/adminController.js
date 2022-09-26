@@ -8,20 +8,31 @@ module.exports = {
     });
   },
   viewCategory: async (req, res) => {
-    const categories = await Category.find();
-    res.render("admin/category/index", {
-      title: "category",
-      dataTables: true,
-      categories,
-    });
+    try {
+      const categories = await Category.find();
+      const alertMessage = req.flash("alertMessage");
+      const alertStatus = req.flash("alertStatus");
+      const alert = { message: alertMessage, status: alertStatus };
+      res.render("admin/category/index", {
+        title: "category",
+        dataTables: true,
+        categories,
+        alert,
+      });
+    } catch (error) {
+      res.redirect("/admin/category");
+    }
   },
   addCategory: async (req, res) => {
     try {
       const { name } = req.body;
       await Category.create({ name });
-
+      req.flash("alertMessage", "Success Add Category");
+      req.flash("alertStatus", "success");
       res.redirect("/admin/category");
     } catch (error) {
+      req.flash("alertMessage", `${$error.message}`);
+      req.flash("alertStatus", "danger");
       res.redirect("/admin/category");
     }
   },
@@ -31,8 +42,12 @@ module.exports = {
       const categoryById = await Category.findOne({ _id: id });
       categoryById.name = name;
       await categoryById.save();
+      req.flash("alertMessage", "Succesfully to updated data");
+      req.flash("alertStatus", "success");
       res.redirect("/admin/category");
     } catch (error) {
+      req.flash("alertMessage", `${error.message}`);
+      req.flash("alertStatus", "danger");
       res.redirect("/admin/category");
     }
   },
@@ -40,6 +55,8 @@ module.exports = {
     const { id } = req.params;
     const categoryById = Category.findOne({ _id: id });
     await categoryById.remove();
+    req.flash("alertMessage", "Succesfully to deleted data");
+    req.flash("alertStatus", "success");
     res.redirect("/admin/category");
   },
   viewBank: (req, res) => {
