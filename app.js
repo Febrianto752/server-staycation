@@ -3,6 +3,7 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
+const methodOverride = require("method-override");
 
 // import mongoose
 const mongoose = require("mongoose");
@@ -27,6 +28,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+// add method override
+app.use(methodOverride("_method"));
 // configure static url to assets sbadmin2
 app.use(
   "/sb-admin-2",

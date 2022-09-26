@@ -21,6 +21,13 @@ module.exports = {
 
     res.redirect("/admin/category");
   },
+  updateCategory: async (req, res) => {
+    const { id, name } = req.body;
+    const categoryById = await Category.findOne({ _id: id });
+    categoryById.name = name;
+    await categoryById.save();
+    res.redirect("/admin/category");
+  },
   viewBank: (req, res) => {
     res.render("admin/bank/index", { title: "bank", dataTables: true });
   },

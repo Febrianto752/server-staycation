@@ -20,7 +20,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="/admin/category" method="post">
+      <form action="/admin/category?_method=PUT" method="post">
         <div class="modal-body">
           <div class="form-group">
             <label for="name">Name</label>
@@ -34,7 +34,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <input type="hidden" id="id-category" />
+          <input type="hidden" id="id-category" class="id" name="id" />
           <button type="button" class="btn btn-secondary" data-dismiss="modal">
             Close
           </button>

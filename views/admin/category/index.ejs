@@ -35,6 +35,60 @@
     </a>
 
     <%- include('../../partials/modal.ejs') %> <%-
-    include('../../partials/script.ejs') %>
+    include('../../partials/script.ejs') %> <%- include('./add_modal.ejs') %>
+    <%- include('./edit_modal.ejs') %>
+
+    <script>
+      // $("#dataTable").on("click", ".btn-update", function () {
+      //   const id = $(this).data("id");
+      //   const name = $(this).data("name");
+      //   $("#editCategoryModal").modal("show");
+      //   $("#id-category").val(id);
+      //   $("#name-edit").val(name);
+      // });
+
+      // show and set modal update category
+      const btnUpdate = document.getElementsByClassName("btn-update")[0];
+      const dataTableElem = document.getElementById("dataTable");
+
+      dataTableElem.addEventListener("click", function (event) {
+        const targetElem = event.target;
+        if (
+          targetElem.classList.contains("btn-update") ||
+          targetElem.classList.contains("fa-edit")
+        ) {
+          let dataId = null;
+          let dataName = null;
+
+          if (targetElem.classList.contains("btn-update")) {
+            dataId = targetElem.dataset.id;
+            dataName = targetElem.dataset.name;
+          } else {
+            dataId = targetElem.parentElement.dataset.id;
+            dataName = targetElem.parentElement.dataset.name;
+          }
+
+          const inputNameCategory = document.getElementById("name-edit");
+          const inputIdCategory = document.getElementById("id-category");
+
+          inputNameCategory.value = dataName;
+          inputIdCategory.value = dataId;
+
+          $("#editCategoryModal").modal("show");
+        }
+      });
+      // btnUpdate.addEventListener("click", function () {
+      //   const dataId = this.dataset.id;
+      //   const dataName = this.dataset.name;
+
+      //   const inputNameCategory = document.getElementById("name-edit");
+      //   const inputIdCategory = document.getElementById("id-category");
+
+      //   inputNameCategory.value = dataName;
+      //   inputIdCategory.value = dataId;
+
+      //   $("#editCategoryModal").modal("show");
+      // });
+    </script>
   </body>
 </html>
