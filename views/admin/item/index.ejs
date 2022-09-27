@@ -16,8 +16,40 @@
           <div class="container-fluid">
             <!-- Page Heading -->
             <h1 class="h3 mb-4 text-gray-800">Item</h1>
-
-            <%- include('tables.ejs') %>
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link active"
+                  id="show-item-tab"
+                  data-toggle="tab"
+                  data-target="#show-item"
+                  type="button"
+                  role="tab"
+                  aria-controls="show-item"
+                  aria-selected="true"
+                >
+                  Show Item
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link"
+                  id="add-item-tab"
+                  data-toggle="tab"
+                  data-target="#add-item"
+                  type="button"
+                  role="tab"
+                  aria-controls="add-item"
+                  aria-selected="false"
+                >
+                  Add Item
+                </button>
+              </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+              <!-- content tab show item  -->
+              <%- include('tables.ejs') %> <%- include('addItem.ejs') %>
+            </div>
           </div>
           <!-- /.container-fluid -->
         </div>

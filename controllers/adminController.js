@@ -2,6 +2,7 @@ const Category = require("../models/Category");
 const Bank = require("../models/Bank");
 const fs = require("fs-extra");
 const path = require("path");
+const Item = require("../models/Item");
 
 module.exports = {
   viewDashboard: (req, res) => {
@@ -145,8 +146,24 @@ module.exports = {
       res.redirect("/admin/bank");
     }
   },
-  viewItem: (req, res) => {
-    res.render("admin/item/index", { title: "item", dataTables: true });
+  viewItem: async (req, res) => {
+    try {
+      const categories = await Category.find();
+      res.render("admin/item/index", {
+        title: "item",
+        dataTables: true,
+        categories,
+      });
+    } catch (error) {
+      const alertMessage = req.flash("alertMessage", `${error.message}`);
+      const alertStatus = req.flash("alertStatus", "danger");
+      const alert = { message: alertMessage, status: alertStatus };
+      res.render("admin/item/index", {
+        title: "item",
+        dataTables: true,
+        alert,
+      });
+    }
   },
   viewBooking: (req, res) => {
     res.render("admin/booking/index", { title: "booking", dataTables: true });
