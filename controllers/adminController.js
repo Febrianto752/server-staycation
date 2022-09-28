@@ -4,6 +4,8 @@ const fs = require("fs-extra");
 const path = require("path");
 const Item = require("../models/Item");
 const Image = require("../models/Image");
+const mongoose = require("mongoose");
+const { ObjectId } = mongoose.Schema;
 
 module.exports = {
   viewDashboard: (req, res) => {
@@ -315,6 +317,38 @@ module.exports = {
         item.save();
       }
       req.flash("alertMessage", "Succesfully to update item");
+      req.flash("alertStatus", "success");
+      res.redirect("/admin/item");
+    } catch (error) {
+      req.flash("alertMessage", `${error.message}`);
+      req.flash("alertStatus", "danger");
+      res.redirect("/admin/item");
+    }
+  },
+  deleteItem: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const item = await Item.findOne({ _id: id }).populate({
+        path: "imageIds",
+        select: "_id imageUrl",
+      });
+      const categoryByQuery = await Category.findOne({
+        itemIds: { $elemMatch: { $in: [item._id] } },
+      });
+
+      categoryByQuery.itemIds = categoryByQuery.itemIds.filter((itemId) => {
+        return String(itemId) !== String(item._id);
+      });
+      await categoryByQuery.save();
+
+      item.imageIds.forEach(async (image) => {
+        const imageWillRemove = await Image.findOne({ _id: image._id });
+        imageWillRemove.remove();
+        fs.unlink(path.join(`public/${image.imageUrl}`));
+      });
+
+      item.remove();
+      req.flash("alertMessage", "Succesfully to delete item");
       req.flash("alertStatus", "success");
       res.redirect("/admin/item");
     } catch (error) {
