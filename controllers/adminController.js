@@ -245,6 +245,84 @@ module.exports = {
       });
     }
   },
+  editItem: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const item = await Item.findOne({ _id: id })
+        .populate({
+          path: "imageIds",
+          select: "id imageUrl",
+        })
+        .populate({ path: "categoryId", select: "_id name" });
+
+      const categories = await Category.find();
+      const alertMessage = req.flash("alertMessage");
+      const alertStatus = req.flash("alertStatus");
+      const alert = { message: alertMessage, status: alertStatus };
+      res.render("admin/item/index", {
+        title: "edit item",
+        item,
+        categories,
+        action: "edit item",
+        alert,
+      });
+    } catch (error) {
+      req.flash("alertMessage", `${error.message}`);
+      req.flash("alertStatus", "danger");
+      res.redirect("/admin/item");
+    }
+  },
+  updateItem: async (req, res) => {
+    try {
+      const { id, title, price, country, city, category, description } =
+        req.body;
+      const item = await Item.findOne({ _id: id }).populate({
+        path: "imageIds",
+        select: "_id imageUrl",
+      });
+
+      if (req.files.length > 0) {
+        const oldImageIds = item.imageIds;
+        item.imageIds = [];
+
+        for (let i = 0; i < req.files.length; i++) {
+          const image = await Image.create({
+            imageUrl: `images/${req.files[i].filename}`,
+          });
+          item.imageIds.push({ _id: image._id });
+        }
+
+        item.title = title;
+        item.price = price;
+        item.country = country;
+        item.city = city;
+        item.categoryId = category;
+        item.description = description;
+        item.save();
+
+        // menghapus file old image item
+        for (let i = 0; i < oldImageIds.length; i++) {
+          await Image.deleteOne({ _id: oldImageIds[i]._id });
+          fs.unlink(path.join(`public/${oldImageIds[i].imageUrl}`));
+        }
+      } else {
+        item.title = title;
+        item.price = price;
+        item.country = country;
+        item.city = city;
+        item.categoryId = category;
+        item.description = description;
+        item.save();
+      }
+      req.flash("alertMessage", "Succesfully to update item");
+      req.flash("alertStatus", "success");
+      res.redirect("/admin/item");
+    } catch (error) {
+      req.flash("alertMessage", `${error.message}`);
+      req.flash("alertStatus", "danger");
+      res.redirect("/admin/item");
+    }
+  },
   viewBooking: (req, res) => {
     res.render("admin/booking/index", { title: "booking", dataTables: true });
   },

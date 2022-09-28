@@ -63,7 +63,7 @@
           <textarea class="form-control" name="description" id="description"></textarea>
         </div>
 
-        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="submit" class="btn btn-primary">Update</button>
       </form>
     </div>
   </div>
@@ -71,7 +71,11 @@
 
 <script src="https://cdn.ckeditor.com/ckeditor5/35.1.0/classic/ckeditor.js"></script>
 <script>
-  ClassicEditor.create(document.querySelector("#description")).catch((error) => {
-    console.error(error);
-  });
+  ClassicEditor.create(document.querySelector("#description")).catch(
+    (error) => {
+      console.error(error);
+    }
+  );
 </script>
+
+

@@ -75,6 +75,28 @@
               <!-- content tab show item  -->
               <%- include('showImagesItem.ejs') %>
             </div>
+            <% }else if(action === 'edit item'){ %>
+
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link active"
+                  id="edit-item-tab"
+                  data-toggle="tab"
+                  data-target="#edit-item"
+                  type="button"
+                  role="tab"
+                  aria-controls="edit-item"
+                  aria-selected="true"
+                >
+                  Edit Item
+                </button>
+              </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+              <!-- content tab show item  -->
+              <%- include('editItem.ejs') %>
+            </div>
             <% } %>
           </div>
           <!-- /.container-fluid -->

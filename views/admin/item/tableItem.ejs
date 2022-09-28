@@ -34,17 +34,7 @@
                 <td><%= items[i].city %></td>
                 <td>
                   <a href="/admin/item/<%= items[i]._id %>/show-images" class="btn btn-sm btn-info btn-circle"><i class="fas fa-image"></i></a>
-                  <button
-                    type="button"
-                    class="btn btn-sm btn-warning btn-circle btn-update"
-                    data-id="<%= items[i]._id %>"
-                    data-title="<%= items[i].title %>"
-                    data-price="<%= items[i].price %>"
-                    data-country="<%= items[i].country %>"
-                    data-city="<%= items[i].city %>"
-                  >
-                    <i class="fas fa-edit"></i>
-                  </button>
+                  <a href="/admin/item/<%= items[i]._id %>/edit" class="btn btn-sm btn-warning btn-circle"><i class="fas fa-edit"></i></a>
                   <form
                     action="/admin/item/<%= items[i]._id %>?_method=DELETE"
                     method="post"
