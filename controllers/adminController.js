@@ -149,6 +149,13 @@ module.exports = {
   },
   viewItem: async (req, res) => {
     try {
+      const items = await Item.find()
+        .populate({
+          path: "imageIds",
+          select: "id imageUrl",
+        })
+        .populate({ path: "categoryId", select: "id name" });
+
       const alertMessage = req.flash("alertMessage");
       const alertStatus = req.flash("alertStatus");
       const alert = { message: alertMessage, status: alertStatus };
@@ -158,6 +165,8 @@ module.exports = {
         dataTables: true,
         alert,
         categories,
+        items,
+        action: "view",
       });
     } catch (error) {
       const alertMessage = req.flash("alertMessage", `${error.message}`);
@@ -205,6 +214,35 @@ module.exports = {
       req.flash("alertMessage", "Failed to add item");
       req.flash("alertStatus", "danger");
       res.redirect("/admin/item");
+    }
+  },
+  showImageItem: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const items = await Item.findOne({ _id: id }).populate({
+        path: "imageIds",
+        select: "id imageUrl",
+      });
+
+      const alertMessage = req.flash("alertMessage");
+      const alertStatus = req.flash("alertStatus");
+      const alert = { message: alertMessage, status: alertStatus };
+      res.render("admin/item/index", {
+        title: "Staycation | images item",
+        dataTables: true,
+        alert,
+        items,
+        action: "show images",
+      });
+    } catch (error) {
+      const alertMessage = req.flash("alertMessage", `${error.message}`);
+      const alertStatus = req.flash("alertStatus", "danger");
+      const alert = { message: alertMessage, status: alertStatus };
+      res.render("admin/item/index", {
+        title: "item",
+        dataTables: true,
+        alert,
+      });
     }
   },
   viewBooking: (req, res) => {

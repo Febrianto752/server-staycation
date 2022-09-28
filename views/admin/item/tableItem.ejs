@@ -1,0 +1,72 @@
+<div
+  class="tab-pane fade show active"
+  id="show-item"
+  role="tabpanel"
+  aria-labelledby="show-item-tab"
+>
+  <div class="card shadow mb-4">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table
+          class="table table-bordered"
+          id="dataTable"
+          width="100%"
+          cellspacing="0"
+        >
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Title</th>
+              <th>Price</th>
+              <th>Country</th>
+              <th>City</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% for(let i = 0; i<items.length; i++){ %> 
+              <tr>
+                <td><%= i+1 %></td>
+                <td><%= items[i].title %></td>
+                <td><%= items[i].price %></td>
+                <td><%= items[i].country %></td>
+                <td><%= items[i].city %></td>
+                <td>
+                  <a href="/admin/item/<%= items[i]._id %>/show-images" class="btn btn-sm btn-info btn-circle"><i class="fas fa-image"></i></a>
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-warning btn-circle btn-update"
+                    data-id="<%= items[i]._id %>"
+                    data-title="<%= items[i].title %>"
+                    data-price="<%= items[i].price %>"
+                    data-country="<%= items[i].country %>"
+                    data-city="<%= items[i].city %>"
+                  >
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <form
+                    action="/admin/item/<%= items[i]._id %>?_method=DELETE"
+                    method="post"
+                    class="d-inline-block"
+                  >
+                    <button
+                      class="btn btn-sm btn-danger btn-circle"
+                      type="submit"
+                      onclick="return confirm('Are you sure to delete it?')"
+                    >
+                      <i class="fas fa-trash"></i>
+                    </button>
+                    <a href="#" class="btn btn-sm btn-success btn-circle"><i class="fas fa-plus"></i></a>
+                  </form>
+                  
+                </td>
+              </tr>
+              
+            <% } %> 
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
