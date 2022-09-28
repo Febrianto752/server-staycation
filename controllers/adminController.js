@@ -3,6 +3,7 @@ const Bank = require("../models/Bank");
 const fs = require("fs-extra");
 const path = require("path");
 const Item = require("../models/Item");
+const Image = require("../models/Image");
 
 module.exports = {
   viewDashboard: (req, res) => {
@@ -43,9 +44,9 @@ module.exports = {
   updateCategory: async (req, res) => {
     try {
       const { id, name } = req.body;
-      const categoryById = await Category.findOne({ _id: id });
-      categoryById.name = name;
-      await categoryById.save();
+      const category = await Category.findOne({ _id: id });
+      category.name = name;
+      await category.save();
       req.flash("alertMessage", "Succesfully to updated data");
       req.flash("alertStatus", "success");
       res.redirect("/admin/category");
@@ -57,8 +58,8 @@ module.exports = {
   },
   deleteCategory: async (req, res) => {
     const { id } = req.params;
-    const categoryById = Category.findOne({ _id: id });
-    await categoryById.remove();
+    const category = Category.findOne({ _id: id });
+    await category.remove();
     req.flash("alertMessage", "Succesfully to delete data");
     req.flash("alertStatus", "success");
     res.redirect("/admin/category");
@@ -95,7 +96,7 @@ module.exports = {
         accountHolder,
         imageUrl: `images/${req.file.filename}`,
       });
-      console.log(req.file);
+
       req.flash("alertMessage", "Succesfully to add bank");
       req.flash("alertStatus", "success");
       res.redirect("/admin/bank");
@@ -108,19 +109,19 @@ module.exports = {
   updateBank: async (req, res) => {
     try {
       const { id, bankName, accountNumber, accountHolder } = req.body;
-      const bankById = await Bank.findOne({ _id: id });
+      const bank = await Bank.findOne({ _id: id });
       let imageUrl = null;
       if (req.file === undefined) {
-        imageUrl = bankById.imageUrl;
+        imageUrl = bank.imageUrl;
       } else if (req.file) {
         imageUrl = `images/${req.file.filename}`;
-        fs.unlink(path.join(`public/${bankById.imageUrl}`));
+        fs.unlink(path.join(`public/${bank.imageUrl}`));
       }
-      bankById.bankName = bankName;
-      bankById.accountNumber = accountNumber;
-      bankById.accountHolder = accountHolder;
-      bankById.imageUrl = imageUrl;
-      bankById.save();
+      bank.bankName = bankName;
+      bank.accountNumber = accountNumber;
+      bank.accountHolder = accountHolder;
+      bank.imageUrl = imageUrl;
+      bank.save();
 
       req.flash("alertMessage", "Succesfully to update bank");
       req.flash("alertStatus", "success");
@@ -134,10 +135,10 @@ module.exports = {
   deleteBank: async (req, res) => {
     try {
       const { id } = req.params;
-      const bankById = await Bank.findOne({ _id: id });
-      fs.unlink(path.join(`public/${bankById.imageUrl}`));
-      await bankById.remove();
-      req.flash("alertMessage", "Succesfully to delete data");
+      const bank = await Bank.findOne({ _id: id });
+      fs.unlink(path.join(`public/${bank.imageUrl}`));
+      await bank.remove();
+      req.flash("alertMessage", "Succesfully to delete bank");
       req.flash("alertStatus", "success");
       res.redirect("/admin/bank");
     } catch (error) {
@@ -148,10 +149,14 @@ module.exports = {
   },
   viewItem: async (req, res) => {
     try {
+      const alertMessage = req.flash("alertMessage");
+      const alertStatus = req.flash("alertStatus");
+      const alert = { message: alertMessage, status: alertStatus };
       const categories = await Category.find();
       res.render("admin/item/index", {
         title: "item",
         dataTables: true,
+        alert,
         categories,
       });
     } catch (error) {
@@ -163,6 +168,43 @@ module.exports = {
         dataTables: true,
         alert,
       });
+    }
+  },
+  addItem: async (req, res) => {
+    try {
+      const {
+        title,
+        price,
+        city,
+        category: categoryId,
+        description,
+      } = req.body;
+      const category = await Category.findOne({ _id: categoryId });
+      const newItem = {
+        categoryId: category._id,
+        title,
+        price,
+        city,
+        description,
+      };
+      const item = await Item.create(newItem);
+      category.itemIds.push({ _id: item._id });
+      await category.save();
+      for (let i = 0; i < req.files.length; i++) {
+        const imageSave = await Image.create({
+          imageUrl: `images/${req.files[i].filename}`,
+        });
+        item.imageIds.push({ _id: imageSave._id });
+      }
+      await item.save();
+
+      req.flash("alertMessage", "Succesfully to add item");
+      req.flash("alertStatus", "success");
+      res.redirect("/admin/item");
+    } catch (error) {
+      req.flash("alertMessage", "Failed to add item");
+      req.flash("alertStatus", "danger");
+      res.redirect("/admin/item");
     }
   },
   viewBooking: (req, res) => {
