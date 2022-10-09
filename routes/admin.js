@@ -22,6 +22,7 @@ router.put("/item/:id", uploadMultiple, adminController.updateItem);
 router.delete("/item/:id", adminController.deleteItem);
 // Detail Item
 router.get("/item/:id", adminController.viewDetailItem);
+router.post("/item/feature", upload, adminController.addFeature);
 // Booking Routes
 router.get("/booking", adminController.viewBooking);
 

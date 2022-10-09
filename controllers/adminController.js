@@ -4,6 +4,7 @@ const fs = require("fs-extra");
 const path = require("path");
 const Item = require("../models/Item");
 const Image = require("../models/Image");
+const Feature = require("../models/Feature");
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema;
 
@@ -360,20 +361,49 @@ module.exports = {
     }
   },
   viewDetailItem: async (req, res) => {
-    const { itemId } = req.params;
+    const { id: itemId } = req.params;
     const alertMessage = req.flash("alertMessage");
     const alertStatus = req.flash("alertStatus");
     const alert = { message: alertMessage, status: alertStatus };
+
     try {
       res.render("admin/item/detail/index", {
         title: "detail item",
         dataTables: true,
         alert,
+        itemId,
       });
     } catch (error) {
       req.flash("alertMessage", `${error.message}`);
       req.flash("alertStatus", "danger");
       res.redirect("/admin/item");
+    }
+  },
+  addFeature: async (req, res) => {
+    try {
+      const { name, qty, itemId } = req.body;
+      if (!req.file) {
+        req.flash("alertMessage", "you must upload file first");
+        req.flash("alertStatus", "danger");
+        res.redirect(`/admin/item/${itemId}`);
+      }
+
+      const feature = await Feature.create({
+        name,
+        qty,
+        imageUrl: `images/${req.file.filename}`,
+        itemId,
+      });
+      const item = await Item.findOne({ _id: itemId });
+      item.featureIds.push({ _id: feature._id });
+      await item.save();
+      req.flash("alertMessage", "Succesfully to add feature");
+      req.flash("alertStatus", "success");
+      res.redirect(`/admin/item/${itemId}`);
+    } catch (error) {
+      req.flash("alertMessage", error.message);
+      req.flash("alertStatus", "danger");
+      res.redirect(`/admin/item/${itemId}`);
     }
   },
   viewBooking: (req, res) => {
