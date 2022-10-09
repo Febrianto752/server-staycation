@@ -283,6 +283,7 @@ module.exports = {
         select: "_id imageUrl",
       });
 
+      // jika user upload gambar item
       if (req.files.length > 0) {
         const oldImageIds = item.imageIds;
         item.imageIds = [];
@@ -336,6 +337,7 @@ module.exports = {
         itemIds: { $elemMatch: { $in: [item._id] } },
       });
 
+      // update category collection (hapus seqmua field yang memiliki itemIds = item._id)
       categoryByQuery.itemIds = categoryByQuery.itemIds.filter((itemId) => {
         return String(itemId) !== String(item._id);
       });
@@ -351,6 +353,23 @@ module.exports = {
       req.flash("alertMessage", "Succesfully to delete item");
       req.flash("alertStatus", "success");
       res.redirect("/admin/item");
+    } catch (error) {
+      req.flash("alertMessage", `${error.message}`);
+      req.flash("alertStatus", "danger");
+      res.redirect("/admin/item");
+    }
+  },
+  viewDetailItem: async (req, res) => {
+    const { itemId } = req.params;
+    const alertMessage = req.flash("alertMessage");
+    const alertStatus = req.flash("alertStatus");
+    const alert = { message: alertMessage, status: alertStatus };
+    try {
+      res.render("admin/item/detail/index", {
+        title: "detail item",
+        dataTables: true,
+        alert,
+      });
     } catch (error) {
       req.flash("alertMessage", `${error.message}`);
       req.flash("alertStatus", "danger");
